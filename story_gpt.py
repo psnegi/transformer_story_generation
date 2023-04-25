@@ -16,7 +16,7 @@ EVAL_ITERS = 200
 
 torch.manual_seed(1337)
 
-#os.system("wget https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt")
+os.system("wget https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt")
 
 with open('input.txt', encoding='utf-8') as f:
   text= f.read()
