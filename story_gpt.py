@@ -6,17 +6,15 @@ import tiktoken
 
 # hyper parameters
 
-BATCH_SIZE = 32
-BLOCK_SIZE = 16
-MAX_ITER = 1000
-EVAL_INTERVAL = 300
+BATCH_SIZE = 64
+BLOCK_SIZE = 128
+MAX_ITER = 10000
+EVAL_INTERVAL = 500
 LR = 1e-3
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
 EVAL_ITERS = 200
 
 torch.manual_seed(1337)
-
-os.system("wget https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt")
 
 with open('input.txt', encoding='utf-8') as f:
   text= f.read()
@@ -143,7 +141,7 @@ class Block(nn.Module):
     return x
 
 
-class BigramModel(torch.nn.Module):
+class TransformerEncoderModel(torch.nn.Module):
   def __init__(self, n_vocab = N_VOCAB, n_embed = 64, n_layer = 4):
     super().__init__()    
     # This of this embedding as specifying the probability of next character
@@ -204,7 +202,7 @@ class BigramModel(torch.nn.Module):
 
     return idx   
   
-model = BigramModel()
+model = TransformerEncoderModel()
 model = model.to(DEVICE)
 opt = torch.optim.Adam(model.parameters(), lr = 0.001)
 
@@ -222,6 +220,6 @@ for iter in range(MAX_ITER):
   opt.step()
 print(loss)  
 
-context = torch.zeros((1,1), dtype=torch.long)
+context = torch.zeros((1,1), dtype=torch.long, device=DEVICE)
 pred = model.generate(context, 500)
 print(decoder(pred[0].tolist()))
